@@ -20,6 +20,7 @@ int    g_mouseStartY = -1;
 Scalar g_rectColor; // ## Rectangle's Color to draw
 int    g_prevMouseX; // ## record previous Mouse_X
 int    g_prevMouseY; // ## record previous Mouse_Y
+Mat    g_prevCanvas; // ## record previous Canvas
 
 // OpenCV Random Number Generator
 RNG g_rng(getTickCount());
@@ -48,6 +49,9 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 
 		// ## determine the color of rectangle
 		g_rectColor = randomColor(g_rng);
+
+		// ## Capture Current Canvas
+		g_prevCanvas = g_imgColor.clone();
     }
     // Left button released
     if (event == EVENT_LBUTTONUP)
@@ -63,8 +67,20 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 	{
 		if (g_isMousePressed) // ## Cursor is moving on canvas and Left Button is pressed
 		{
-			// ## Cover the previously drawn rectangle with a new black rectangle.
-			rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(g_prevMouseX, g_prevMouseY), Scalar(0), -1);
+			// ## Cover the previously drawn rectangle with captured canvas
+			uchar *src, *dst;
+			int   n_channels = g_imgColor.channels();
+			for (int row = 0; row <= g_imgColor.rows; ++row)
+			{
+				src = g_prevCanvas.ptr<uchar>(row);
+				dst = g_imgColor.ptr<uchar>(row);
+				for (int col = 0; col <= g_imgColor.cols; ++col)
+				{
+					dst[n_channels * col + 0] = src[n_channels * col + 0];
+					dst[n_channels * col + 1] = src[n_channels * col + 1];
+					dst[n_channels * col + 2] = src[n_channels * col + 2];
+				}
+			}
         	// Draw a rectangle
         	rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
 			// ## Update the previous mouse position
