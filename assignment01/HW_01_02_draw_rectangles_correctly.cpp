@@ -1,6 +1,6 @@
 /*
 ** 2023 1st Semester : Computer Vision
-** HomeWork01-02 : HW_01_02_draw_ractangles_correctly.cpp
+** HomeWork01-02 : HW_01_02_draw_rectangles_correctly.cpp
 ** written by HyunJun KIM (2019204054)
 ** Summary : draw rectangles correctly while dragging 
 ** Comments beginning '##' are handwritten
