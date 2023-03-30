@@ -1,8 +1,8 @@
 /*
 ** 2023 1st Semester : Computer Vision
-** HomeWork01-03 : HW_01_03_draw_rectangles_and_ellipses.cpp
+** HomeWork01-04 : HW_01_04_draw_rectangles_and_ellipses_and_brush.cpp
 ** written by HyunJun KIM (2019204054)
-** Summary : draw rectangles and ellipses while dragging, toggle by key event 
+** Summary : draw rectangles, ellipses, and brushes toggle by key.
 ** Comments beginning '##' are handwritten
 */
 
@@ -20,7 +20,7 @@ int    g_mouseStartY = -1;
 Scalar g_rectColor; // ## Rectangle's Color to draw
 int    g_prevMouseX; // ## record previous Mouse_X
 int    g_prevMouseY; // ## record previous Mouse_Y
-int    g_drawingMode; // ## toggle drawing shape. 0: rectangles, 1: ellipses
+int    g_drawingMode; // ## toggle drawing shape. 0: rectangles, 1: ellipses, 2: brushes
 
 // OpenCV Random Number Generator
 RNG g_rng(getTickCount());
@@ -60,9 +60,12 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		case 0: // ## drawing Rectangles
 			rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
 			break;
-		case 1: // ## drawing Ellipses, if ellipse's linetype is 16(LINE_AA), draw a antialiased circle 
+		case 1: // ## drawing Ellipses
 			ellipse(g_imgColor, RotatedRect(Point(g_mouseStartX, g_mouseStartY), \
 				Size(abs(x - g_mouseStartX), abs(y - g_mouseStartY)), 0), g_rectColor, -1, 16);
+			break;
+		case 2: // ## brushes, if circle's linetype is 16(LINE_AA), draw a antialiased circle 
+			circle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), 5, g_rectColor, -1, 16);
 			break;
 		}
     }
@@ -77,11 +80,14 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 				rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(g_prevMouseX, g_prevMouseY), Scalar(0), -1);
 				rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
 				break;
-			case 1: // ## drawing Ellipses, if ellipse's linetype is 16(LINE_AA), draw a antialiased circle 
+			case 1: // ## drawing Ellipses
 				ellipse(g_imgColor, RotatedRect(Point(g_mouseStartX, g_mouseStartY), \
 					Size(abs(g_prevMouseX - g_mouseStartX), abs(g_prevMouseY - g_mouseStartY)), 0), g_rectColor, -1, 16);
 				ellipse(g_imgColor, RotatedRect(Point(g_mouseStartX, g_mouseStartY), \
 					Size(abs(x - g_mouseStartX), abs(y - g_mouseStartY)), 0), g_rectColor, -1, 16);
+				break;
+			case 2: // ## brushes, if circle's linetype is 16(LINE_AA), draw a antialiased circle 
+				circle(g_imgColor, Point(x, y), 5, g_rectColor, -1, 16);
 				break;
 		}
 			// ## Update the previous mouse position
@@ -116,8 +122,8 @@ int main()
 
         // ESC
         if (key == 27) break;
-		else if (key == 'm') // ## Listen 'm'key event
-			g_drawingMode = (g_drawingMode + 1) % 2 ;
+		else if (key == 'm') // ## Listen 'm' key event
+			g_drawingMode = (g_drawingMode + 1) % 3 ;
     }
 
     // Destroy all windows
