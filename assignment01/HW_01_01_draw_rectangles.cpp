@@ -1,3 +1,11 @@
+/*
+** 2023 1st Semester : Computer Vision
+** HomeWork01-01 : HW_01_01_draw_ractangles.cpp
+** written by HyunJun KIM (2019204054)
+** Summary : draw rectangles while dragging
+** Comments beginning '##' are handwritten
+*/
+
 #include <iostream>
 using namespace std;
 
@@ -9,6 +17,7 @@ Mat    g_imgColor;
 bool   g_isMousePressed = false;
 int    g_mouseStartX = -1;
 int    g_mouseStartY = -1;
+Scalar g_rectColor; // ## Rectangle's Color to draw
 
 // OpenCV Random Number Generator
 RNG g_rng(getTickCount());
@@ -30,20 +39,28 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
         // Record the mouse position
         g_mouseStartX = x;
         g_mouseStartY = y;
-    }
 
+		// ## determine the color of rectangle
+		g_rectColor = randomColor(g_rng);
+    }
     // Left button released
     if (event == EVENT_LBUTTONUP)
     {
         // Flag off
         g_isMousePressed = false;
 
-        // Pick a random color
-        Scalar color = randomColor(g_rng);
-
         // Draw a rectangle
-        rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), color, -1);
+        rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
     }
+	// ## Listen New Event : Mouse Cursor is moving on canvas 
+	if (event == EVENT_MOUSEMOVE)
+	{
+		if (g_isMousePressed) // ## Cursor is moving on canvas and Left Button is pressed
+		{
+        	// Draw a rectangle
+        	rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
+		}
+	}
 }
 
 int main()
