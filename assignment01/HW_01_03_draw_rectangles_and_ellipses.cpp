@@ -116,7 +116,7 @@ int main()
 
         // ESC
         if (key == 27) break;
-		else if (key == 'm')
+		else if (key == 'm') // ## Listen 'm'key event
 			g_drawingMode = (g_drawingMode + 1) % 2 ;
     }
 
