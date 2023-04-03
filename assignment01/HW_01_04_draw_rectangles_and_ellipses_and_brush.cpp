@@ -65,11 +65,11 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 			rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
 			break;
 		case 1: // ## drawing Ellipses
-			ellipse(g_imgColor, RotatedRect(Point(g_mouseStartX, g_mouseStartY), \
+			ellipse(g_imgColor, RotatedRect(Point((x + g_mouseStartX) / 2, (y + g_mouseStartY) / 2), \
 				Size(abs(x - g_mouseStartX), abs(y - g_mouseStartY)), 0), g_rectColor, -1, 16);
 			break;
 		case 2: // ## brushes, if circle's linetype is 16(LINE_AA), draw a antialiased circle 
-			circle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), 5, g_rectColor, -1, 16);
+			circle(g_imgColor, Point(x, y), 5, g_rectColor, -1, 16);
 			break;
 		}
     }
@@ -102,7 +102,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 				rectangle(g_imgColor, Point(g_mouseStartX, g_mouseStartY), Point(x, y), g_rectColor, -1);
 				break;
 			case 1: // ## drawing Ellipses
-				ellipse(g_imgColor, RotatedRect(Point(g_mouseStartX, g_mouseStartY), \
+				ellipse(g_imgColor, RotatedRect(Point((x + g_mouseStartX) / 2, (y + g_mouseStartY) / 2), \
 					Size(abs(x - g_mouseStartX), abs(y - g_mouseStartY)), 0), g_rectColor, -1, 16);
 				break;
 			}
