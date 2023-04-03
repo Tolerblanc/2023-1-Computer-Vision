@@ -18,8 +18,8 @@ bool   g_isMousePressed = false;
 int    g_mouseStartX = -1;
 int    g_mouseStartY = -1;
 Scalar g_rectColor; // ## Rectangle's Color to draw
-int    g_prevMouseX; // ## record previous Mouse_X
-int    g_prevMouseY; // ## record previous Mouse_Y
+int    g_mousePrevX; // ## record previous Mouse_X
+int    g_mousePrevY; // ## record previous Mouse_Y
 Mat    g_prevCanvas; // ## record previous Canvas
 int    g_drawingMode; // ## toggle drawing shape. 0: rectangles, 1: ellipses
 
@@ -45,8 +45,8 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
         g_mouseStartY = y;
 
 		// ## Initialize the previous mouse position
-		g_prevMouseX = x;
-		g_prevMouseY = y;
+		g_mousePrevX = x;
+		g_mousePrevY = y;
 
 		// ## determine the color of rectangle
 		g_rectColor = randomColor(g_rng);
@@ -100,8 +100,8 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 				break;
 		}
 			// ## Update the previous mouse position
-			g_prevMouseX = x;
-			g_prevMouseY = y;
+			g_mousePrevX = x;
+			g_mousePrevY = y;
 		}
 	}
 }
