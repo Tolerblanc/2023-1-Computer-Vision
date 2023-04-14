@@ -2,12 +2,13 @@
 
 - Submitter : HyunJun KIM (2019204054)
 ## Summary
-- ???
+- Draw Histogram, Histogram equalization, Image thresholding
 - Created on Apple Silicon MacOSX 13.2, CMake Configuration may not working.
+- If you are only using source files, please uncomment CMakeLists.txt to copy the image
 ## Installation
 - Apple Silicon Mac
 1. Install Homebrew  
-2. Install pkg-config and OpenCV using Homebrew  
+2. Install pkg-config and OpenCV via Homebrew  
 '''bash
 brew install pkg-config; brew install opencv
 '''

@@ -7,12 +7,14 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <algorithm> // to use max_element
 
 using namespace std;
 using namespace cv;
 
 void	check_type(Mat& img)
 {
+	// image type debugging
 	cout << "Image width: "  << img.cols << endl;
     cout << "Image height: " << img.rows << endl;
     cout << "Image channles: " << img.channels() << endl;
@@ -107,20 +109,29 @@ int	main()
     int bin_w = cvRound((double) hist_w/histSize);
     Mat histImage(hist_h, hist_w, CV_8UC3, Scalar(255, 255, 255));
 
+	// Get Maximum values for each channels.
+	double max_values[3];
+	minMaxLoc(hists[0], nullptr, &max_values[0]);
+	minMaxLoc(hists[1], nullptr, &max_values[1]);
+	minMaxLoc(hists[2], nullptr, &max_values[2]);
+
     // For each channel
     for (int c = 0; c < 3; c++)
     {
-        // Normalize the histogram in [0, hist_h]
-        normalize(hists[c], hists[c], 0, hist_h, NORM_MINMAX, -1, noArray());
+        // Normalize the histogram in [0, hist_h] -> 3 plots have same max value.
+        // normalize(hists[c], hists[c], 0, hist_h, NORM_MINMAX, -1, noArray());
+
+		// Normalize the histogram in [0, hist_h * {curr_max_value / max(max_values)}] -> 3 plots have same scale(= different max value).
+		auto hist_h_max = *max_element(max_values, max_values + 3);
+		normalize(hists[c], hists[c], 0, hist_h * (max_values[c] / hist_h_max), NORM_MINMAX, -1, noArray());
 
         // Plot the histogram
         Scalar color(c==0?255:0, c==1?255:0, c==2?255:0);
         for(int b = 1; b < histSize; b++)
         {
-            line(histImage, Point(bin_w*(b-1), hist_h - cvRound(hists[c].at<float>(b-1))),
-                            Point(bin_w*(b),   hist_h - cvRound(hists[c].at<float>(b))),
+            line(histImage, Point(bin_w*(b-1), (hist_h - cvRound(hists[c].at<float>(b-1)))),
+                            Point(bin_w*(b),   (hist_h - cvRound(hists[c].at<float>(b)))),
                             color, 2);
-
         }
     }
 	
@@ -128,9 +139,12 @@ int	main()
 	Mat tempImage1;
 	hconcat(srcImage, histImage, tempImage1);
 
+	// Clear previous variables
 	bgrPlanes.clear();
 	hists.clear();
 	histImage.release();
+
+	// Make new histogram image
 	histImage = Mat(hist_h, hist_w, CV_8UC3, Scalar(255, 255, 255));
 	// Split RGB channels
 	split(srcImage, bgrPlanes);
