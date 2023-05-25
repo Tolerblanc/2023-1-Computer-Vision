@@ -12,7 +12,7 @@ int		g_mouseStartX = -1;
 int		g_mouseStartY = -1;
 int		g_totalShiftX = -1;
 int		g_totalShiftY = -1;
-String	g_strWindowName = "translation";
+String	g_strWindowName = "HW_03_02_translation_original";
 
 // Mouse callback function
 void mouse_callback(int event, int x, int y, int flags, void *param)

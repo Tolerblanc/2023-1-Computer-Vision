@@ -2,7 +2,7 @@
 
 - Submitter : HyunJun KIM (2019204054)
 ## Summary
-- 
+- Scale, Translate, Rotate Image by mouse events.
 ## Installation
 ### Apple Silicon Mac
 1. Install Homebrew  

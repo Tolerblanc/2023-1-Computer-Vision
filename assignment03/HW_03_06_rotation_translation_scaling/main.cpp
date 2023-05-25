@@ -108,8 +108,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		crossedZ = x < g_imageCenterX ? -crossedZ : crossedZ;
 
 		// get the theta between prevVector and currVector.
-		double theta = acos(prevVector.dot(currVector)) * 180.0 / CV_PI;
-		theta = crossedZ > 0 ? theta : -theta;
+		double theta = atan2(crossedZ, prevVector.dot(currVector)) * 180.0 / CV_PI;
 
 		if (theta > 0.1 || theta < -0.1)
 		{
@@ -128,10 +127,10 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 														0, 1, g_imageCenterY,
 														0, 0, 1);
 		
-		// Combine the transformations
+			// Combine the transformations
 			Mat combined = translationBack * rotation * translationToOrigin;
 		
-		// Apply the combined transformation
+			// Apply the combined transformation
 			g_scale.push_back(temp);
 			g_scale = combined * g_scale;
 			g_scale.pop_back();

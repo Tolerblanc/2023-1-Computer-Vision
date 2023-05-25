@@ -13,21 +13,23 @@ int		g_CursorY = -1;
 bool	g_isMousePressed = false;
 int		g_mouseStartX = -1;
 int		g_mouseStartY = -1;
-String	g_strWindowName = "translation";
+String	g_strWindowName = "HW_03_05_translation_scaling";
 
 Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 {
-	double	newScaler;
-	double	translationX;
-	double	translationY;
+	Mat newScale;
+	Mat delta = (Mat_<double>(3,3) << scale, 0, x * (1 - scale),
+										0, scale, y * (1 - scale),
+										0, 0, 1);
+	Mat temp = (Mat_<double>(1,3) << 0, 0, 1);
 
-	newScaler = prevScale.at<double>(0, 0) * scale;
-	translationX = prevScale.at<double>(0, 2) * scale + x * (1 - scale);
-	translationY = prevScale.at<double>(1, 2) * scale + y * (1 - scale);
-	Mat newScale = (Mat_<double>(2,3) << newScaler, 0, translationX,
-										0, newScaler, translationY);
+	newScale = prevScale;
+	newScale.push_back(temp);
+	newScale = delta * newScale;
+	newScale.pop_back();
 	return (newScale);
 }
+
 // Mouse callback function
 void mouse_callback(int event, int x, int y, int flags, void *param)
 {

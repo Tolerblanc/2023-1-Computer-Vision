@@ -10,7 +10,7 @@ Mat		g_origin;
 Mat		g_scale;
 int		g_CursorX = -1;
 int		g_CursorY = -1;
-String	g_strWindowName = "translation";
+String	g_strWindowName = "HW_03_04_scaling_center";
 
 Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 {

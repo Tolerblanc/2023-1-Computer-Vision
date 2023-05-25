@@ -9,7 +9,7 @@ Mat		g_canvas;
 bool	g_isMousePressed = false;
 int		g_mouseStartX = -1;
 int		g_mouseStartY = -1;
-String	g_strWindowName = "translation";
+String	g_strWindowName = "HW_03_01_translation";
 
 // Mouse callback function
 void mouse_callback(int event, int x, int y, int flags, void *param)

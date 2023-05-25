@@ -8,7 +8,7 @@ using namespace cv;
 Mat		g_canvas;
 Mat		g_origin;
 Mat		g_scale;
-String	g_strWindowName = "translation";
+String	g_strWindowName = "HW_03_03_scaling";
 
 // Mouse callback function
 void mouse_callback(int event, int x, int y, int flags, void *param)
