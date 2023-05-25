@@ -18,7 +18,7 @@ int		g_mouseRightStartX = -1;
 int		g_mouseRightStartY = -1;
 int		g_imageCenterX = -1;
 int		g_imageCenterY = -1;
-String	g_strWindowName = "translation";
+String	g_strWindowName = "HW_03_06_rotation_translation_scaling";
 
 Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 {
