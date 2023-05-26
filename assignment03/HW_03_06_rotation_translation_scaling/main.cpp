@@ -109,17 +109,18 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 	// Right Button dragging
 	if (event == EVENT_MOUSEMOVE && g_isMouseRightPressed)
 	{
+		Mat	imageCenter = (Mat_<double>(1,3) << g_imageCenterX, g_imageCenterY, 0);
 		// Get two vectors from image center to previous, current cursor position.
 		Mat prevVector = (Mat_<double>(1,3) << g_mouseRightStartX, g_mouseRightStartY, 0);
+		prevVector = prevVector - imageCenter;
 		Mat currVector = (Mat_<double>(1,3) << x, y, 0);
+		currVector = currVector - imageCenter;
 
 		normalize(prevVector, prevVector);
 		normalize(currVector, currVector);
 
 		// if crossedZ > 0, vector moves counterclockwise. else, vector moves clockwise.
 		double crossedZ = currVector.cross(prevVector).at<double>(0, 2);
-		// Calibrate the orientation by seperating the case of the cursor to the left and right based on the center of the image
-		crossedZ = x < g_imageCenterX ? -crossedZ : crossedZ;
 
 		// get the theta between prevVector and currVector.
 		double theta = atan2(crossedZ, prevVector.dot(currVector)) * 180.0 / CV_PI;
