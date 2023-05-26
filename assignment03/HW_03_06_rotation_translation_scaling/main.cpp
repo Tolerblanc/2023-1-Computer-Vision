@@ -1,3 +1,10 @@
+/*
+** 2023 1st Semester : Computer Vision
+** HomeWork03-06 : HW_03_06_rotation_translation_scaling
+** written by HyunJun KIM (2019204054)
+** Image translation, scaling, rotation by mouse events
+** In MacOS, Mouse Wheel event doesn't work. test with '-' and '+' key.
+*/
 #include <iostream>
 using namespace std;
 
@@ -20,18 +27,21 @@ int		g_imageCenterX = -1;
 int		g_imageCenterY = -1;
 String	g_strWindowName = "HW_03_06_rotation_translation_scaling";
 
+// Update scaling matrix
 Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 {
 	Mat newScale;
 	Mat delta = (Mat_<double>(3,3) << scale, 0, x * (1 - scale),
 										0, scale, y * (1 - scale),
 										0, 0, 1);
-	Mat temp = (Mat_<double>(1,3) << 0, 0, 1);
+	Mat temp = (Mat_<double>(1,3) << 0, 0, 1); // Add to prevScale to make 3 by 3 block matrix
 
 	newScale = prevScale;
 	newScale.push_back(temp);
-	newScale = delta * newScale;
-	newScale.pop_back();
+	newScale = delta * newScale; // Multiply matrix to get new scale(transformation) matrix
+	newScale.pop_back(); // Make the matrix to 2 by 3
+
+	// Calculate the coordinates of image for smooth center rotation.
 	g_imageCenterX = static_cast<int>(round(g_imageCenterX * scale + x * (1 - scale)));
 	g_imageCenterY = static_cast<int>(round(g_imageCenterY * scale + y * (1 - scale)));
 	return (newScale);
@@ -50,7 +60,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		g_scale = get_new_scale(g_scale, 0.8, x, y);
 		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
 	}
-	if (event == EVENT_MOUSEMOVE)
+	if (event == EVENT_MOUSEMOVE) // Record current coordinates of cursor to test in MacOS
 	{
 		g_CursorX = x;
 		g_CursorY = y;
@@ -70,6 +80,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		// Flag off
 		g_isMouseLeftPressed = false;
 	}
+	// Left Button dragging
 	if (event == EVENT_MOUSEMOVE && g_isMouseLeftPressed)
 	{
 		g_scale.at<double>(0, 2) += x - g_mouseLeftStartX;
@@ -80,7 +91,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		g_mouseLeftStartX = x;
 		g_mouseLeftStartY = y;
 	}
-	if (event == EVENT_RBUTTONDOWN)
+	if (event == EVENT_RBUTTONDOWN) // Right button pressed
 	{
 		// Flag on
 		g_isMouseRightPressed = true;
@@ -89,13 +100,16 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		g_mouseRightStartX = x;
 		g_mouseRightStartY = y;
 	}
+	// Right button released
 	if (event == EVENT_RBUTTONUP)
 	{
 		// Flag off
 		g_isMouseRightPressed = false;
 	}
+	// Right Button dragging
 	if (event == EVENT_MOUSEMOVE && g_isMouseRightPressed)
 	{
+		// Get two vectors from image center to previous, current cursor position.
 		Mat prevVector = (Mat_<double>(1,3) << g_mouseRightStartX, g_mouseRightStartY, 0);
 		Mat currVector = (Mat_<double>(1,3) << x, y, 0);
 
@@ -112,22 +126,21 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 
 		if (theta > 0.1 || theta < -0.1)
 		{
-			// Step 1: Translate center of the image to origin
+			// Translate center of the image to origin
 			Mat translationToOrigin = (Mat_<double>(3,3) << 1, 0, -g_imageCenterX,
 															0, 1, -g_imageCenterY,
 															0, 0, 1);
 		
-			// Step 2: Rotate
 			Mat rotation = getRotationMatrix2D(Point2f(0, 0), theta, 1); // rotate around origin
 			Mat	temp = (Mat_<double>(1,3) << 0, 0, 1);
 			rotation.push_back(temp);
 		
-			// Step 3: Translate back to the original center
+			// Translate back to the original center
 			Mat translationBack = (Mat_<double>(3,3) << 1, 0, g_imageCenterX,
 														0, 1, g_imageCenterY,
 														0, 0, 1);
 		
-			// Combine the transformations
+			// Combine the transformations by matrix multiplication
 			Mat combined = translationBack * rotation * translationToOrigin;
 		
 			// Apply the combined transformation

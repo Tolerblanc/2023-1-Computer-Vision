@@ -1,3 +1,11 @@
+/*
+** 2023 1st Semester : Computer Vision
+** HomeWork03-03 : HW_03_03_scaling
+** written by HyunJun KIM (2019204054)
+** Image scaling by mouse events
+** In MacOS, Mouse Wheel event doesn't work. test with '-' and '+' key.
+*/
+
 #include <iostream>
 using namespace std;
 
@@ -15,11 +23,13 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 {
 	if (event == EVENT_MOUSEWHEEL && flags < 0) // pull wheel
 	{
+		// scalar multiplication to scaling matrix
 		g_scale = g_scale * 1.2;
 		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
 	}
 	if (event == EVENT_MOUSEWHEEL && flags > 0) // push wheel
 	{
+		// scalar multiplication to scaling matrix
 		g_scale = g_scale * 0.8;
 		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
 	}
@@ -32,6 +42,8 @@ int main()
 
 	g_canvas = imread("../messi5.jpg");
 	g_origin = imread("../messi5.jpg");
+
+	// scaling matrix
 	g_scale = (Mat_<double>(2,3) << 1, 0, 0,
 									0, 1, 0);
 

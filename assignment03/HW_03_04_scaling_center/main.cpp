@@ -1,3 +1,11 @@
+/*
+** 2023 1st Semester : Computer Vision
+** HomeWork03-04 : HW_03_04_scaling_center
+** written by HyunJun KIM (2019204054)
+** Image scaling by mouse events considering cursor position
+** In MacOS, Mouse Wheel event doesn't work. test with '-' and '+' key.
+*/
+
 #include <iostream>
 using namespace std;
 
@@ -12,12 +20,17 @@ int		g_CursorX = -1;
 int		g_CursorY = -1;
 String	g_strWindowName = "HW_03_04_scaling_center";
 
+
+// Update scaling matrix
 Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 {
 	double	newScaler;
 	double	translationX;
 	double	translationY;
 
+	// Translate from mouse cursor postion to (0,0)
+	// And Scale the matrix.
+	// Undo translation from (0,0) to mouse cursor position.
 	newScaler = prevScale.at<double>(0, 0) * scale;
 	translationX = prevScale.at<double>(0, 2) * scale + x * (1 - scale);
 	translationY = prevScale.at<double>(1, 2) * scale + y * (1 - scale);
@@ -25,6 +38,7 @@ Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 										0, newScaler, translationY);
 	return (newScale);
 }
+
 // Mouse callback function
 void mouse_callback(int event, int x, int y, int flags, void *param)
 {
@@ -38,7 +52,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		g_scale = get_new_scale(g_scale, 0.8, x, y);
 		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
 	}
-	if (event == EVENT_MOUSEMOVE)
+	if (event == EVENT_MOUSEMOVE) // Record current coordinates of cursor to test in MacOS
 	{
 		g_CursorX = x;
 		g_CursorY = y;
@@ -52,6 +66,8 @@ int main()
 
 	g_canvas = imread("../messi5.jpg");
 	g_origin = imread("../messi5.jpg");
+
+	// scaling matrix
 	g_scale = (Mat_<double>(2,3) << 1, 0, 0,
 									0, 1, 0);
 

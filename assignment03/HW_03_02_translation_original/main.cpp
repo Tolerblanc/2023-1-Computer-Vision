@@ -1,3 +1,10 @@
+/*
+** 2023 1st Semester : Computer Vision
+** HomeWork03-02 : HW_03_02_translation_original
+** written by HyunJun KIM (2019204054)
+** Image translation by mouse events considering cursor position
+*/
+
 #include <iostream>
 using namespace std;
 
@@ -35,13 +42,16 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 		g_isMousePressed = false;
 	}
 
+	// mouse dragging
 	if (event == EVENT_MOUSEMOVE && g_isMousePressed)
 	{
+		// Calculate total shift vector
 		g_totalShiftX += x - g_mouseStartX;
 		g_totalShiftY += y - g_mouseStartY;
 
+		// translation matrix
 		Mat	M = (Mat_<double>(2,3) << 1, 0, g_totalShiftX,
-									  0, 1, g_totalShiftY); // translation 
+									  0, 1, g_totalShiftY);
 		warpAffine(g_origin, g_canvas, M, g_canvas.size());
 		g_mouseStartX = x;
 		g_mouseStartY = y;
