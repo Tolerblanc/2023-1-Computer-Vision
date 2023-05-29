@@ -42,14 +42,10 @@ Mat	get_new_scale(Mat prevScale, double scale, int x, int y)
 // Mouse callback function
 void mouse_callback(int event, int x, int y, int flags, void *param)
 {
-	if (event == EVENT_MOUSEWHEEL && flags < 0) // pull wheel
+	if (event == EVENT_MOUSEWHEEL)
 	{
-		g_scale = get_new_scale(g_scale, 1.2, x, y);
-		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
-	}
-	if (event == EVENT_MOUSEWHEEL && flags > 0) // push wheel
-	{
-		g_scale = get_new_scale(g_scale, 0.8, x, y);
+		double	nextScale = flags > 0 ? 1.2 : 0.8;
+		g_scale = g_scale * nextScale; // scalar multiplication to scaling matrix
 		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
 	}
 	if (event == EVENT_MOUSEMOVE) // Record current coordinates of cursor to test in MacOS

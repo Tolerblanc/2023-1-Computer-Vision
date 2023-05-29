@@ -1,6 +1,7 @@
 # 2023-1 KWU Computer Vision Homework 03
 
 - Submitter : HyunJun KIM (2019204054)
+- **Caution** : MacOS doesn't support any mouse wheel events. All subjects tested by keyboard events in MacOS.
 ## Summary
 - Scale, Translate, Rotate Image by mouse events.
 ## Installation
