@@ -43,7 +43,7 @@ void mouse_callback(int event, int x, int y, int flags, void *param)
 {
 	if (event == EVENT_MOUSEWHEEL)
 	{
-		double	nextScale = flags > 0 ? 1.2 : 0.8;
+		double	nextScale = flags < 0 ? 1.2 : 0.8;
 		g_scale = get_new_scale(g_scale, nextScale, x, y);
 		warpAffine(g_origin, g_canvas, g_scale, g_canvas.size());
 	}
